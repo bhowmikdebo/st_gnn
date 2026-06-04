@@ -1,14 +1,14 @@
 {
   "stgnn": {
-    "mae": 0.105,
-    "rmse": 0.147
+    "mae": 0.133,
+    "rmse": 0.174
   },
   "moving_average": {
     "mae": 0.062,
     "rmse": 0.104
   },
   "random_forest": {
-    "mae": 0.078,
-    "rmse": 0.106
+    "mae": 0.082,
+    "rmse": 0.111
   }
 }

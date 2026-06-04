@@ -411,12 +411,23 @@ def main():
     print(f"  ST-GNN reduces MAE by {rf_improve:.1f}% vs Random Forest")
 
     # ── Save metrics ─────────────────────────────────────────────────────────
+    def json_metric(value):
+        return round(float(value), 3)
+
     metrics = {
-        "stgnn":          {"mae": round(stgnn_mae, 3), "rmse": round(stgnn_rmse, 3)},
-        "moving_average": {"mae": round(ma_mae,    3), "rmse": round(ma_rmse,    3)},
-        "random_forest":  {"mae": round(rf_mae,    3), "rmse": round(rf_rmse,    3)},
+        "stgnn": {
+            "mae": json_metric(stgnn_mae),
+            "rmse": json_metric(stgnn_rmse),
+        },
+        "moving_average": {
+            "mae": json_metric(ma_mae),
+            "rmse": json_metric(ma_rmse),
+        },
+        "random_forest": {
+            "mae": json_metric(rf_mae),
+            "rmse": json_metric(rf_rmse),
+        },
     }
-    import json
     with open(MODELS_DIR / "metrics.json", "w") as f:
         json.dump(metrics, f, indent=2)
 
