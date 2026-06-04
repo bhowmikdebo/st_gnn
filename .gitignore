@@ -133,6 +133,5 @@ dmypy.json
 .DS_Store
 Thumbs.db
 
-# Project specific
-*.npy
-*.pt
+# Project artifacts needed by the Streamlit app are intentionally committable.
+# If future checkpoints become large, move them to Git LFS or object storage.

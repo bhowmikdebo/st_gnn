@@ -25,6 +25,9 @@ from utils.explainability import compute_wpi, explain_prediction, compute_zone_b
 
 # ─── Predictor Class ──────────────────────────────────────────────────────────
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+
 class WastePredictor:
     """
     Wraps the trained ST-GNN for inference.
@@ -36,11 +39,11 @@ class WastePredictor:
     """
 
     def __init__(self,
-                 models_dir:    str = "models/saved",
-                 processed_dir: str = "data/processed"):
+                 models_dir:    str = None,
+                 processed_dir: str = None):
 
-        self.models_dir    = Path(models_dir)
-        self.processed_dir = Path(processed_dir)
+        self.models_dir    = Path(models_dir) if models_dir else BASE_DIR / "models" / "saved"
+        self.processed_dir = Path(processed_dir) if processed_dir else BASE_DIR / "data" / "processed"
         self.device        = torch.device("cpu")   # CPU for inference
         self.model         = None
         self.scaler        = None

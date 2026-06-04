@@ -4,12 +4,17 @@ import torch.nn as nn
 import torch.optim as optim
 import numpy as np
 import pandas as pd
+import os
+import tempfile
+from pathlib import Path
+os.environ.setdefault("MPLCONFIGDIR", str(Path(tempfile.gettempdir()) / "matplotlib"))
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 import seaborn as sns
 import json
 import joblib
-from pathlib import Path
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 
@@ -21,9 +26,10 @@ from models.model   import ST_GNN, normalise_adjacency
 from models.dataset import create_dataloaders, FEATURE_COLS
 
 # ─── Config ───────────────────────────────────────────────────────────────────
-PROCESSED_DIR = Path("data/processed")
-MODELS_DIR    = Path("models/saved")
-PLOTS_DIR     = Path("outputs/training_plots")
+BASE_DIR      = Path(__file__).resolve().parent
+PROCESSED_DIR = BASE_DIR / "data" / "processed"
+MODELS_DIR    = BASE_DIR / "models" / "saved"
+PLOTS_DIR     = BASE_DIR / "outputs" / "training_plots"
 
 MODELS_DIR.mkdir(parents=True, exist_ok=True)
 PLOTS_DIR.mkdir(parents=True, exist_ok=True)
@@ -183,7 +189,7 @@ def plot_training_curves(train_losses, val_maes):
 
     plt.tight_layout()
     plt.savefig(PLOTS_DIR / "training_curves.png", dpi=150, bbox_inches="tight")
-    plt.show()
+    plt.close(fig)
     print(f"[Plot] Saved training curves → {PLOTS_DIR}/training_curves.png")
 
 
@@ -221,7 +227,7 @@ def plot_spatial_heatmap(model, zones):
     plt.yticks(rotation=0, fontsize=8)
     plt.tight_layout()
     plt.savefig(PLOTS_DIR / "spatial_heatmap.png", dpi=150, bbox_inches="tight")
-    plt.show()
+    plt.close(fig)
     print(f"[Plot] Saved spatial heatmap → {PLOTS_DIR}/spatial_heatmap.png")
 
 
@@ -260,7 +266,7 @@ def plot_temporal_attention(model, zones, window=7):
     plt.yticks(rotation=0, fontsize=8)
     plt.tight_layout()
     plt.savefig(PLOTS_DIR / "temporal_attention.png", dpi=150, bbox_inches="tight")
-    plt.show()
+    plt.close(fig)
     print(f"[Plot] Saved temporal attention → {PLOTS_DIR}/temporal_attention.png")
 
 
@@ -285,7 +291,7 @@ def plot_prediction_vs_actual(preds_mt, targets_mt, zones, n_samples=60):
                  fontsize=13, fontweight="bold")
     plt.tight_layout()
     plt.savefig(PLOTS_DIR / "prediction_vs_actual.png", dpi=150, bbox_inches="tight")
-    plt.show()
+    plt.close(fig)
     print(f"[Plot] Saved prediction vs actual → {PLOTS_DIR}/prediction_vs_actual.png")
 
 
@@ -394,9 +400,9 @@ def main():
     print("=" * 55)
     print(f"  {'Model':<22}  {'MAE (MT)':>10}  {'RMSE (MT)':>10}")
     print("-" * 55)
-    print(f"  {'Moving Average'::<22}  {ma_mae:>10.2f}  {ma_rmse:>10.2f}")
-    print(f"  {'Random Forest'::<22}  {rf_mae:>10.2f}  {rf_rmse:>10.2f}")
-    print(f"  {'ST-GNN (Ours)'::<22}  {stgnn_mae:>10.2f}  {stgnn_rmse:>10.2f}")
+    print(f"  {'Moving Average':<22}  {ma_mae:>10.2f}  {ma_rmse:>10.2f}")
+    print(f"  {'Random Forest':<22}  {rf_mae:>10.2f}  {rf_rmse:>10.2f}")
+    print(f"  {'ST-GNN (Ours)':<22}  {stgnn_mae:>10.2f}  {stgnn_rmse:>10.2f}")
     print("=" * 55)
 
     ma_improve = (ma_mae - stgnn_mae) / ma_mae * 100

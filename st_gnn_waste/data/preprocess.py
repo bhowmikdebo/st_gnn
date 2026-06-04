@@ -22,8 +22,9 @@ from pathlib import Path
 import json
 
 # ─── Paths ────────────────────────────────────────────────────────────────────
-RAW_CSV    = Path("data/raw/SolidWasteGeneratedCollectedProcessedDataChennai2015to2018.csv")
-OUT_DIR    = Path("data/processed")
+BASE_DIR   = Path(__file__).resolve().parent.parent
+RAW_CSV    = BASE_DIR / "data" / "raw" / "SolidWasteGeneratedCollectedProcessedDataChennai2015to2018.csv"
+OUT_DIR    = BASE_DIR / "data" / "processed"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # ─── Zone metadata: approximate lat/lon centroids for Chennai zones ───────────
@@ -260,8 +261,8 @@ def main():
     with open(OUT_DIR / "zones.json", "w") as f:
         json.dump(zones, f, indent=2)
 
-    print(f"[4/4] Saved adjacency matrix ({len(zones)}×{len(zones)}) → data/processed/adjacency.npy")
-    print(f"      Saved zone list → data/processed/zones.json")
+    print(f"[4/4] Saved adjacency matrix ({len(zones)}×{len(zones)}) → {OUT_DIR / 'adjacency.npy'}")
+    print(f"      Saved zone list → {OUT_DIR / 'zones.json'}")
 
     # ── Quick summary ─────────────────────────────────────────────────────────
     print("\n── Data Summary ──────────────────────────────────────────")
